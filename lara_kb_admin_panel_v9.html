@@ -134,7 +134,18 @@ body{font-family:var(--f);background:#F8FAFC;min-height:100vh}
 .faq-n{font-size:11px;font-weight:700;color:var(--purple-text);display:flex;align-items:center;gap:6px}
 .faq-bubble{width:20px;height:20px;border-radius:50%;background:var(--purple);color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700}
 
-/* ADDONS */
+/* MÓDULOS */
+.modulo-card{border:1.5px solid #E2E8F0;border-radius:var(--r12);overflow:hidden;background:#fff;margin-bottom:8px}
+.modulo-head{display:flex;align-items:center;justify-content:space-between;padding:11px 15px;cursor:pointer;transition:background 0.14s}
+.modulo-head:hover{background:#F8FAFC}
+.modulo-card.open .modulo-head{background:#F8FAFC;border-bottom:1.5px solid #E2E8F0}
+.modulo-left{display:flex;align-items:center;gap:8px}
+.modulo-emoji{width:30px;height:30px;border-radius:8px;background:#EFF4FF;display:flex;align-items:center;justify-content:center;font-size:15px}
+.modulo-title-display{font-size:13.5px;font-weight:600;color:#1E293B}
+.modulo-chevron{color:var(--gray);font-size:11px;transition:transform 0.2s}
+.modulo-card.open .modulo-chevron{transform:rotate(180deg)}
+.modulo-body{display:none;padding:14px 15px}
+.modulo-card.open .modulo-body{display:block}
 .addon-wrap{display:flex;flex-direction:column;gap:8px}
 .addon-card{border:1.5px solid #E2E8F0;border-radius:var(--r12);overflow:hidden;background:#fff}
 .addon-head{display:flex;align-items:center;justify-content:space-between;padding:11px 15px;cursor:pointer;transition:background 0.14s}
@@ -216,6 +227,8 @@ pre#kb-preview{font-family:var(--fm);font-size:11.5px;color:#475569;white-space:
   <button class="tab" onclick="sw('agente',this)">🤖 Agente</button>
   <button class="tab" onclick="sw('botones',this)">🔘 Botones</button>
   <button class="tab" onclick="sw('faq',this)">💬 FAQ</button>
+  <button class="tab" onclick="sw('modulos',this)">📦 Módulos</button>
+  <button class="tab" onclick="sw('onboarding',this)">🎓 Onboarding</button>
   <button class="tab" onclick="sw('soporte',this)">🛠 Soporte</button>
   <button class="tab" onclick="sw('humano',this)">👤 Derivación</button>
   <button class="tab" onclick="sw('preview',this)">📄 KB lista</button>
@@ -293,6 +306,35 @@ pre#kb-preview{font-family:var(--fm);font-size:11.5px;color:#475569;white-space:
   <div class="ibox"><span class="ibox-icon">💡</span>Agregá preguntas y respuestas que enriquecen la KB. Lara las usa como fuente de verdad adicional.</div>
   <div id="faq-container"></div>
   <button class="btn add sm" onclick="addFaq()" style="margin-top:4px">+ Agregar pregunta</button>
+</div>
+
+<!-- MÓDULOS -->
+<div class="pane" id="pane-modulos">
+  <div class="slabel">Módulos de Persat</div>
+  <div class="ibox"><span class="ibox-icon">📦</span>Todos los módulos están incluidos en el Plan Esencial. Editá el nombre y descripción de cada uno. Podés agregar o eliminar módulos cuando cambien.</div>
+  <div id="modulos-container"></div>
+  <button class="btn add sm" onclick="addModulo()" style="margin-top:6px">+ Agregar módulo</button>
+</div>
+
+<!-- ONBOARDING -->
+<div class="pane" id="pane-onboarding">
+  <div class="slabel">Proceso de onboarding</div>
+  <div class="ibox"><span class="ibox-icon">🎓</span>Esta información cambia con el tiempo. Actualizala cada vez que el proceso de activación evolucione. Lara la usa para responder preguntas sobre cómo empezar.</div>
+  <div class="card blue">
+    <div class="card-header"><span class="card-title">Modalidad actual</span><span class="badge b-blue">Hoy</span></div>
+    <div class="row2">
+      <div class="field"><label>Modalidad</label><input id="ob-modalidad" value="Autoguiado" placeholder="Ej: Autoguiado, Asistido, Híbrido" oninput="markDirty()"/></div>
+      <div class="field"><label>Tiempo de activación</label><input id="ob-tiempo" value="48 horas" placeholder="Ej: 48 horas, 1 semana" oninput="markDirty()"/></div>
+    </div>
+    <div class="field"><label>Qué incluye el onboarding</label><textarea id="ob-incluye" oninput="markDirty()">Configuración autoguiada de la plataforma, acceso inmediato a los 6 módulos y soporte por el canal oficial si surge alguna duda durante la activación.</textarea></div>
+    <div class="field"><label>Canal de soporte durante onboarding</label><input id="ob-soporte" value="Canal oficial de soporte: https://soporte.persat.com" placeholder="Ej: email, WhatsApp, Intercom..." oninput="markDirty()"/></div>
+    <div class="field"><label>¿Hay llamada de bienvenida?</label><input id="ob-llamada" value="No por ahora" placeholder="Ej: Sí, 30 min con el equipo / No" oninput="markDirty()"/></div>
+    <div class="field"><label>Materiales disponibles</label><textarea id="ob-materiales" style="min-height:54px" oninput="markDirty()">Configuración autoguiada dentro de la plataforma.</textarea></div>
+  </div>
+  <div class="card" style="border-color:#E2E8F0;border-left:3px solid #94A3B8">
+    <div class="card-header"><span class="card-title">Notas internas</span><span class="badge" style="background:#F1F5F9;color:#64748B;border:1px solid #CBD5E1">Solo equipo — no va a la KB</span></div>
+    <div class="field"><label>Contexto y decisiones tomadas</label><textarea id="ob-notas" style="min-height:80px;background:#F8FAFC" placeholder="Ej: Cambiamos a modalidad asistida en marzo 2025 porque los primeros 20 clientes necesitaban ayuda para la configuración inicial..." oninput="markDirty()"></textarea></div>
+  </div>
 </div>
 
 <!-- SOPORTE -->
@@ -462,7 +504,13 @@ function collectData(){
       confirm: v('human-confirm'), pipeline: v('hs-pipeline'), stage: v('hs-stage'),
       fields: getActiveFields()
     },
-    addons, buttons, faqs, rules
+    addons, buttons, faqs, rules, modulos,
+    onboarding: {
+      modalidad: v('ob-modalidad'), tiempo: v('ob-tiempo'),
+      incluye: v('ob-incluye'), soporte: v('ob-soporte'),
+      llamada: v('ob-llamada'), materiales: v('ob-materiales'),
+      notas: v('ob-notas')
+    }
   };
 }
 
@@ -497,6 +545,13 @@ function applyData(d){
   if(d.buttons && d.buttons.length) buttons = d.buttons;
   if(d.faqs && d.faqs.length) faqs = d.faqs;
   if(d.rules && d.rules.length) rules = d.rules;
+  if(d.modulos && d.modulos.length) modulos = d.modulos;
+  if(d.onboarding){
+    sv('ob-modalidad', d.onboarding.modalidad); sv('ob-tiempo', d.onboarding.tiempo);
+    sv('ob-incluye', d.onboarding.incluye); sv('ob-soporte', d.onboarding.soporte);
+    sv('ob-llamada', d.onboarding.llamada); sv('ob-materiales', d.onboarding.materiales);
+    sv('ob-notas', d.onboarding.notas);
+  }
 }
 
 function sv(id, val){ if(val !== undefined && val !== null){ const el=document.getElementById(id); if(el) el.value=val; } }
@@ -509,6 +564,58 @@ function hideSaveBar(){ isDirty=false; document.getElementById('save-bar').class
 // ─── LOADING ───────────────────────────────────────────────
 function showLoading(msg){ document.getElementById('loading-msg').textContent=msg; document.getElementById('loading').classList.add('show'); }
 function hideLoading(){ document.getElementById('loading').classList.remove('show'); }
+
+let modulos=[
+  {id:'clientes',emoji:'👥',name:'Gestión de Clientes',desc:'Administrá a tus clientes y prospectos desde la app. Accedés a la ficha completa de cada uno, incluso desde el mapa.'},
+  {id:'rastreo',emoji:'📍',name:'Rastreo Satelital',desc:'Visualizá en tiempo real la ubicación de tu equipo o tus vehículos y controlá el cumplimiento de rutas de visita.'},
+  {id:'mantenimiento',emoji:'🔧',name:'Mantenimiento Preventivo',desc:'Evitá sorpresas en tu flota. Configurá alertas de mantenimiento para tus vehículos por kilómetro recorrido o por fechas.'},
+  {id:'entregas',emoji:'📦',name:'Gestión de Entregas',desc:'Trabajá múltiples entregas con rutas más eficientes. Recibí notificaciones de visita y documentos de entrega con firma digital.'},
+  {id:'formularios',emoji:'📋',name:'Formularios Digitales',desc:'Creá formularios digitales con el logo de tu empresa y campos adaptables a lo que necesitás registrar. Todo desde la app, sin papel.'},
+  {id:'ordenes',emoji:'✅',name:'Órdenes de Trabajo',desc:'Organizá visualmente las tareas de tu equipo, asignalas a un responsable con tiempo estimado y recibí alerta cuando terminan.'},
+];
+let moduloNextId=100;
+
+function renderModulos(){
+  const c=document.getElementById('modulos-container');
+  if(!c)return;
+  c.innerHTML=modulos.map(m=>`
+    <div class="modulo-card" id="mc-${m.id}">
+      <div class="modulo-head" onclick="toggleModulo('${m.id}')">
+        <div class="modulo-left">
+          <div class="modulo-emoji">${m.emoji}</div>
+          <div class="modulo-title-display">${m.name}</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <button class="btn danger sm" onclick="event.stopPropagation();removeModulo('${m.id}')" style="padding:3px 9px">× Eliminar</button>
+          <span class="modulo-chevron">▾</span>
+        </div>
+      </div>
+      <div class="modulo-body">
+        <div class="row2">
+          <div class="field"><label>Emoji</label><input id="${m.id}-memoji" value="${m.emoji}" style="font-size:18px;text-align:center" oninput="updateModulo('${m.id}','emoji',this.value)"/></div>
+          <div class="field"><label>Nombre del módulo</label><input id="${m.id}-mname" value="${m.name}" oninput="updateModulo('${m.id}','name',this.value)"/></div>
+        </div>
+        <div class="field"><label>Descripción para Lara — qué hace este módulo en lenguaje simple</label><textarea id="${m.id}-mdesc" oninput="updateModulo('${m.id}','desc',this.value)">${m.desc}</textarea></div>
+      </div>
+    </div>`).join('');
+}
+function toggleModulo(id){ document.getElementById('mc-'+id).classList.toggle('open'); }
+function addModulo(){
+  const id='mod_'+moduloNextId++;
+  modulos.push({id,emoji:'🔷',name:'Nuevo módulo',desc:''});
+  renderModulos(); markDirty();
+  document.getElementById('mc-'+id).classList.add('open');
+}
+function removeModulo(id){ modulos=modulos.filter(m=>m.id!==id); renderModulos(); markDirty(); generateKB(); }
+function updateModulo(id,field,val){
+  const m=modulos.find(x=>x.id===id);
+  if(m){
+    m[field]=val;
+    if(field==='name'){ const el=document.querySelector(`#mc-${id} .modulo-title-display`); if(el)el.textContent=val; }
+    if(field==='emoji'){ const el=document.querySelector(`#mc-${id} .modulo-emoji`); if(el)el.textContent=val; }
+    markDirty();
+  }
+}
 
 // ─── DATA ──────────────────────────────────────────────────
 let addons=[
@@ -543,7 +650,7 @@ let rules=[
 let ruleNextId=10;
 
 // ─── RENDER FUNCTIONS ──────────────────────────────────────
-function renderAll(){ renderAddons(); renderButtons(); renderFaqs(); renderRules(); }
+function renderAll(){ renderAddons(); renderButtons(); renderFaqs(); renderRules(); renderModulos(); }
 
 function renderAddons(){
   document.getElementById('addons-container').innerHTML=addons.map(a=>`
@@ -650,6 +757,9 @@ function generateKB(){
   kb+=`## Botones de acceso rápido\n`;
   buttons.forEach((b,i)=>{ kb+=`### Botón ${i+1}: ${b.emoji} ${b.label}\nInstrucción: ${b.instruction}\n\n`; });
   kb+=`## ${v('plan-name')||'Plan Esencial'} — Plan base\nPrecio: U$S ${v('plan-price')||'99'}/mes\nTrial: ${v('plan-trial')}\nUsuarios: ${v('plan-users')}\nMódulos: ${v('plan-modules')}\nDescripción: ${v('plan-desc')}\nBonus: ${v('plan-bonus')}\nRequisito técnico: ${v('plan-req')}\n\n`;
+  kb+=`## Módulos de Persat\nPersat incluye ${modulos.length} módulos. Todos están disponibles en el Plan Esencial.\n`;
+  modulos.forEach(m=>{ kb+=`\n### ${m.name}\n${m.desc}\n`; });
+  kb+=`\n## Onboarding — Proceso de activación\nModalidad: ${v('ob-modalidad')}\nTiempo de activación: ${v('ob-tiempo')}\nQué incluye: ${v('ob-incluye')}\nCanal de soporte durante activación: ${v('ob-soporte')}\nLlamada de bienvenida: ${v('ob-llamada')}\nMateriales disponibles: ${v('ob-materiales')}\n\n`;
   kb+=`## Add-ons disponibles\n`;
   addons.forEach(a=>{ kb+=`\n### ${a.name}\nPrecio: + U$S ${a.price}/${a.unit}\nDescripción: ${a.desc}\nIncluye: ${a.includes}\n`; });
   kb+=`\n## Preguntas frecuentes\n`;
